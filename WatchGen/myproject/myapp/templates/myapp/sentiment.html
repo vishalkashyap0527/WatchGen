@@ -1,0 +1,60 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12">
+    <h2>Sentiment Analysis Report</h2>
+    <p class="text-muted">Report date: {{ report_date }}</p>
+  </div>
+
+  <div class="col-lg-8">
+    <h4>Sentiment Score Per Movie</h4>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Movie</th>
+            <th>Avg Sentiment Score</th>
+            <th>Reviews</th>
+            <th>Positive</th>
+            <th>Neutral</th>
+            <th>Negative</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in movie_sentiments %}
+          <tr>
+            <td>{{ item.movie_name }}</td>
+            <td>{{ item.avg_sentiment_score|floatformat:3 }}</td>
+            <td>{{ item.review_count }}</td>
+            <td>{{ item.positive_count }}</td>
+            <td>{{ item.neutral_count }}</td>
+            <td>{{ item.negative_count }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">No review sentiment data available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <h4>Recent Reviews</h4>
+    <ul class="list-group">
+      {% for review in recent_reviews %}
+      <li class="list-group-item">
+        <div class="fw-semibold">{{ review.movie_name }}</div>
+        <small class="text-muted">
+          {{ review.user.username }} | {{ review.sentiment_label|title }} ({{ review.sentiment_score }})
+        </small>
+        <div>{{ review.review_text|truncatechars:120 }}</div>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No reviews yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

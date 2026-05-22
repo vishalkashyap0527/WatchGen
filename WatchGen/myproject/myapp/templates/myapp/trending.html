@@ -1,0 +1,238 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<!-- Full screen background -->
+<div style="min-height:100vh; background:#0e0e23; color:#fff; font-family:'Montserrat', sans-serif;">
+
+  <!-- Inner container for proper padding -->
+  <div class="container-fluid py-4 px-5">
+
+    <!-- Header -->
+    <div class="mb-4">
+      <h1 style="font-size:2.8rem; font-weight:700;
+                 background: linear-gradient(90deg,#ff3c78,#9b59b6);
+                 -webkit-background-clip:text;
+                 -webkit-text-fill-color:transparent;">
+        Trending Movies Analysis
+      </h1>
+      <p class="text-muted" style="color:#bbb;">Report date: {{ report_date }}</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Most Viewed Movies -->
+      <div class="col-lg-6">
+        <h4>Most Viewed Movies</h4>
+        <div class="table-responsive">
+          <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th>Movie</th>
+                <th>Views</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in most_viewed %}
+              <tr>
+                <td>{{ item.movie_name }}</td>
+                <td>{{ item.view_count }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2">No view data available.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Rated Movies -->
+      <div class="col-lg-6">
+        <h4>Top Rated Movies</h4>
+        <div class="table-responsive">
+          <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th>Movie</th>
+                <th>Avg Rating</th>
+                <th>Ratings</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in top_rated %}
+              <tr>
+                <td>{{ item.movie_name }}</td>
+                <td>{{ item.avg_rating|floatformat:2 }}/5</td>
+                <td>{{ item.rating_count }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">No rating data available.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Weekly Trends -->
+      <div class="col-lg-6">
+        <h4>Weekly Trends</h4>
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+          <div>
+            <label class="form-label mb-1" for="weeklyRange">Range</label>
+            <select id="weeklyRange" class="form-select form-select-sm">
+              <option value="4">Last 4 Weeks</option>
+              <option value="8" selected>Last 8 Weeks</option>
+              <option value="12">Last 12 Weeks</option>
+            </select>
+          </div>
+          <div class="form-check mt-4">
+            <input class="form-check-input" type="checkbox" value="" id="weeklyShowViews" checked>
+            <label class="form-check-label" for="weeklyShowViews">Views</label>
+          </div>
+          <div class="form-check mt-4">
+            <input class="form-check-input" type="checkbox" value="" id="weeklyShowRatings" checked>
+            <label class="form-check-label" for="weeklyShowRatings">Ratings</label>
+          </div>
+        </div>
+        {{ weekly_labels|json_script:"weekly-labels-data" }}
+        {{ weekly_views|json_script:"weekly-views-data" }}
+        {{ weekly_ratings|json_script:"weekly-ratings-data" }}
+        <div class="mb-3">
+          <canvas id="weeklyTrendChart" height="140"></canvas>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-dark">
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Views</th>
+                <th>Ratings</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in weekly_trends %}
+              <tr>
+                <td>{{ row.period }}</td>
+                <td>{{ row.views }}</td>
+                <td>{{ row.ratings }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">No weekly trend data available.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Monthly Trends -->
+      <div class="col-lg-6">
+        <h4>Monthly Trends</h4>
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="monthlyShowViews" checked>
+            <label class="form-check-label" for="monthlyShowViews">Views</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="monthlyShowRatings" checked>
+            <label class="form-check-label" for="monthlyShowRatings">Ratings</label>
+          </div>
+        </div>
+        {{ monthly_labels|json_script:"monthly-labels-data" }}
+        {{ monthly_views|json_script:"monthly-views-data" }}
+        {{ monthly_ratings|json_script:"monthly-ratings-data" }}
+        <div class="mb-3">
+          <canvas id="monthlyTrendChart" height="140"></canvas>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-dark">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Views</th>
+                <th>Ratings</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in monthly_trends %}
+              <tr>
+                <td>{{ row.period }}</td>
+                <td>{{ row.views }}</td>
+                <td>{{ row.ratings }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">No monthly trend data available.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+  // --- Weekly Chart Script ---
+  const weeklyLabels = JSON.parse(document.getElementById('weekly-labels-data').textContent);
+  const weeklyViews = JSON.parse(document.getElementById('weekly-views-data').textContent);
+  const weeklyRatings = JSON.parse(document.getElementById('weekly-ratings-data').textContent);
+  const weeklyCanvas = document.getElementById('weeklyTrendChart');
+  const weeklyRangeSelect = document.getElementById('weeklyRange');
+  const weeklyShowViews = document.getElementById('weeklyShowViews');
+  const weeklyShowRatings = document.getElementById('weeklyShowRatings');
+  let weeklyChart = null;
+
+  function weeklyDatasetsFromToggles(viewsData, ratingsData) {
+    const sets = [];
+    if (weeklyShowViews.checked) sets.push({ label:'Views', data:viewsData, borderColor:'#ff3c78', backgroundColor:'rgba(255,60,120,0.15)', tension:0.25 });
+    if (weeklyShowRatings.checked) sets.push({ label:'Ratings', data:ratingsData, borderColor:'#9b59b6', backgroundColor:'rgba(155,89,182,0.15)', tension:0.25 });
+    if(sets.length===0){ sets.push({label:'Views', data:viewsData, borderColor:'#ff3c78', backgroundColor:'rgba(255,60,120,0.15)', tension:0.25}); weeklyShowViews.checked=true;}
+    return sets;
+  }
+
+  function renderWeeklyChart(){
+    if(!weeklyCanvas) return;
+    const range=parseInt(weeklyRangeSelect.value,10);
+    const labels=weeklyLabels.slice(-range);
+    const viewsData=weeklyViews.slice(-range);
+    const ratingsData=weeklyRatings.slice(-range);
+    const datasets=weeklyDatasetsFromToggles(viewsData,ratingsData);
+    if(weeklyChart) weeklyChart.destroy();
+    weeklyChart=new Chart(weeklyCanvas,{type:'line', data:{labels,datasets}, options:{responsive:true, plugins:{legend:{position:'top'}}, scales:{y:{beginAtZero:true}}}});
+  }
+
+  if(weeklyCanvas){ renderWeeklyChart(); weeklyRangeSelect.addEventListener('change', renderWeeklyChart); weeklyShowViews.addEventListener('change', renderWeeklyChart); weeklyShowRatings.addEventListener('change', renderWeeklyChart); }
+
+  // --- Monthly Chart Script ---
+  const monthlyLabels = JSON.parse(document.getElementById('monthly-labels-data').textContent);
+  const monthlyViews = JSON.parse(document.getElementById('monthly-views-data').textContent);
+  const monthlyRatings = JSON.parse(document.getElementById('monthly-ratings-data').textContent);
+  const monthlyCanvas = document.getElementById('monthlyTrendChart');
+  const monthlyShowViews = document.getElementById('monthlyShowViews');
+  const monthlyShowRatings = document.getElementById('monthlyShowRatings');
+  let monthlyChart = null;
+
+  function monthlyDatasetsFromToggles(){
+    const sets=[];
+    if(monthlyShowViews.checked) sets.push({label:'Views', data:monthlyViews, backgroundColor:'rgba(255,60,120,0.7)'});
+    if(monthlyShowRatings.checked) sets.push({label:'Ratings', data:monthlyRatings, backgroundColor:'rgba(155,89,182,0.7)'});
+    if(sets.length===0){ sets.push({label:'Views', data:monthlyViews, backgroundColor:'rgba(255,60,120,0.7)'); monthlyShowViews.checked=true;}
+    return sets;
+  }
+
+  function renderMonthlyChart(){
+    if(!monthlyCanvas) return;
+    if(monthlyChart) monthlyChart.destroy();
+    monthlyChart=new Chart(monthlyCanvas,{type:'bar', data:{labels:monthlyLabels, datasets:monthlyDatasetsFromToggles()}, options:{responsive:true, plugins:{legend:{position:'top'}}, scales:{y:{beginAtZero:true}}}});
+  }
+
+  if(monthlyCanvas){ renderMonthlyChart(); monthlyShowViews.addEventListener('change', renderMonthlyChart); monthlyShowRatings.addEventListener('change', renderMonthlyChart);}
+</script>
+{% endblock %}

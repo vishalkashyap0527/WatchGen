@@ -1,0 +1,147 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body, .about-page {
+    font-family: 'Montserrat', sans-serif;
+    background:  #141414;
+    color: #fff;
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .hero {
+    text-align: center;
+    padding-bottom: 40px;
+  }
+
+  .hero h1 {
+    font-weight: 700;
+    font-size: 3.2rem;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .hero p {
+    font-size: 1.3rem;
+    color: #e6f2e6; /* light greenish white */
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 60px 0 30px;
+    color: #145214;
+  }
+
+  .mission {
+    background: #27ae60; /* darker green block */
+    padding: 30px 20px;
+    border-radius: 12px;
+    color:#d0d0d0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: auto;
+  }
+
+  .team {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .card {
+    background:#d0d0d0/* dark green */
+    border-radius: 12px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+    text-align: center;
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+
+  .team-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #d0f0c0;
+    margin-bottom: 15px;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color:#2a2a2a
+  }
+
+  .card-text {
+    font-size: 1rem;
+    color: #1c1c1c;
+  }
+
+  @media(max-width: 768px){
+    .team {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+
+<div class="about-page">
+
+  <div class="container">
+    <div class="hero">
+      <h1>About WatchGen</h1>
+      <p>Never waste time scrolling again. WatchGen (FlixFlow) learns your preferences and suggests movies you’ll actually love, making every movie night effortless and unforgettable.</p>
+    </div>
+
+    <h2 class="section-title">🎯 Our Mission</h2>
+    <div class="mission">
+      Our mission is to make your movie-watching experience easier. Using intelligent algorithms and data science, we deliver personalized recommendations in just seconds to your screen.
+    </div>
+
+    <h2 class="section-title">👨‍💻 Meet the Team</h2>
+    <div class="team">
+
+      <div class="card">
+        <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="Abhishek" class="team-img">
+        <div class="card-title">Abhishek Prajapati</div>
+        <div class="card-text">Full Stack Developer & ML Enthusiast</div>
+      </div>
+
+      <div class="card">
+        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Faize" class="team-img">
+        <div class="card-title">Faize</div>
+        <div class="card-text">UI/UX Designer & Frontend Specialist</div>
+      </div>
+      <div class="card">
+        <img src="https://randomuser.me/api/portraits/men/31.jpg" alt="Aditya Singh" class="team-img">
+        <div class="card-title">Aditya Singh</div>
+        <div class="card-text">Backend Developer & API Architect</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

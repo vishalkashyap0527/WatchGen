@@ -1,0 +1,109 @@
+{% extends 'myapp/base.html' %}
+{% block title %}Signup | WatchGen{% endblock %}
+
+{% block content %}
+<div style="
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba') no-repeat center center/cover;
+">
+  <!-- Dark overlay -->
+  <div style="
+      position: absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.7);
+      z-index:1;
+  "></div>
+
+  <!-- Signup Card -->
+  <div style="
+      position: relative;
+      z-index:2;
+      background: rgba(30, 0, 50, 0.85);
+      padding: 50px 35px;
+      border-radius: 16px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+      width: 100%;
+      max-width: 420px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+  ">
+    <h2 style="
+        font-size:2.8rem;
+        font-weight:700;
+        background: linear-gradient(90deg, #ff3c78, #9b59b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 25px;
+    ">Create Your Account</h2>
+
+    <p style="color:#ccc; margin-bottom:30px;">Sign up for WatchGen to get personalized movie recommendations and explore trending films.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="mb-3" style="margin-bottom:20px; text-align:left;">
+        <label for="username" style="font-weight:600; margin-bottom:5px; display:block;">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username" required style="
+            width:100%;
+            padding:12px 15px;
+            border-radius:8px;
+            border:1px solid #444;
+            background:#1a1a2e;
+            color:#fff;
+            font-size:1rem;
+            transition:0.3s;
+        " onfocus="this.style.border='1px solid #ff3c78'" onblur="this.style.border='1px solid #444'">
+      </div>
+
+      <div class="mb-3" style="margin-bottom:20px; text-align:left;">
+        <label for="email" style="font-weight:600; margin-bottom:5px; display:block;">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required style="
+            width:100%;
+            padding:12px 15px;
+            border-radius:8px;
+            border:1px solid #444;
+            background:#1a1a2e;
+            color:#fff;
+            font-size:1rem;
+            transition:0.3s;
+        " onfocus="this.style.border='1px solid #ff3c78'" onblur="this.style.border='1px solid #444'">
+      </div>
+
+      <div class="mb-3" style="margin-bottom:25px; text-align:left;">
+        <label for="password" style="font-weight:600; margin-bottom:5px; display:block;">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" minlength="8" required style="
+            width:100%;
+            padding:12px 15px;
+            border-radius:8px;
+            border:1px solid #444;
+            background:#1a1a2e;
+            color:#fff;
+            font-size:1rem;
+            transition:0.3s;
+        " onfocus="this.style.border='1px solid #ff3c78'" onblur="this.style.border='1px solid #444'">
+      </div>
+
+      <button type="submit" style="
+          width:100%;
+          padding:14px 0;
+          border:none;
+          border-radius:10px;
+          background: linear-gradient(90deg,#ff3c78,#9b59b6);
+          color:#fff;
+          font-size:1.1rem;
+          font-weight:700;
+          cursor:pointer;
+          transition:0.3s;
+      " onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Signup</button>
+
+      <p style="margin-top:18px; font-size:0.9rem; color:#bbb;">Already have an account? <a href="{% url 'login' %}" style="color:#ff3c78; text-decoration:none;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">Login here</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

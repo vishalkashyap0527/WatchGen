@@ -1,0 +1,70 @@
+<div style="position:relative;
+min-height:100vh;
+background:url('https://images.unsplash.com/photo-1478720568477-152d9b164e26')no-repeat center center/cover;">
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'myapp/styles.css' %}">
+
+<div class="container">
+    <h1>Welcome to WatchGen</h1>
+    <p>Select a movie to get recommendations</p>
+
+    <form method="get" class="mb-3">
+        <label for="tmdb_mode">Poster source</label>
+        <select id="tmdb_mode" name="tmdb_mode">
+            <option value="auto" {% if tmdb_mode == 'auto' %}selected{% endif %}>Auto</option>
+            <option value="on" {% if tmdb_mode == 'on' %}selected{% endif %}>Force TMDB</option>
+            <option value="off" {% if tmdb_mode == 'off' %}selected{% endif %}>Default only</option>
+        </select>
+
+        <select name="movie" required>
+            <option value="">Choose a movie</option>
+            {% for movie in movies %}
+                <option value="{{ movie }}"{% if selected_movie == movie %}selected{% endif %}>
+                    {{ movie }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Show Recommendation</button>
+    </form>
+
+    {% if tmdb_status_message %}
+    <p>{{ tmdb_status_message }}</p>
+    {% endif %}
+
+    {% if recommendation_note %}
+    <p>{{ recommendation_note }}</p>
+    {% endif %}
+
+    {% if preferred_genres %}
+    <p>
+        <strong>Your Preferred Genres:</strong>
+        {% for genre, score in preferred_genres %}
+            {{ genre }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    {% endif %}
+
+    {% if recommendation_stage != 'none' %}
+    <p><strong>Recommendation Mode:</strong> {{ recommendation_stage|title }}</p>
+    {% endif %}
+
+    {% if guidance_message %}
+    <p>{{ guidance_message }}</p>
+    {% endif %}
+
+    {% if recommended %}
+    <div class="recommendations">
+        {% for item in recommended %}
+        <a class="card text-decoration-none text-dark" href="{% url 'movie_detail' item.name %}?movie_id={{ item.movie_id }}&from_reco=1{% if selected_movie %}&source={{ selected_movie|urlencode }}{% endif %}">
+            <img src="{{item.poster}}" alt="{{ item.name }}">
+            <p>{{ item.name }}</p>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+</div>

@@ -1,0 +1,87 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-5">
+    <h2>{{ request.user.username }} Profile</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label" for="favorite_genre">Favorite Genre</label>
+        <input class="form-control" id="favorite_genre" name="favorite_genre" type="text" value="{{ profile.favorite_genre }}" placeholder="e.g. Sci-Fi">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="profile_picture">Profile Picture</label>
+        <input class="form-control" id="profile_picture" name="profile_picture" type="file" accept="image/*">
+      </div>
+      <button class="btn btn-primary" type="submit">Update Profile</button>
+    </form>
+  </div>
+
+  <div class="col-md-7">
+    <h3>Behavior Analytics</h3>
+    <ul class="list-group mb-4">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Total Views</span>
+        <small class="text-muted">{{ analytics.total_views }}</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Total Ratings</span>
+        <small class="text-muted">{{ analytics.total_ratings }}</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Total Reviews</span>
+        <small class="text-muted">{{ analytics.total_reviews }}</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Last Interaction</span>
+        <small class="text-muted">
+          {% if analytics.last_interaction %}
+            {{ analytics.last_interaction.interaction_type|title }} - {{ analytics.last_interaction.movie_name }}
+          {% else %}
+            No interactions yet
+          {% endif %}
+        </small>
+      </li>
+    </ul>
+
+    <h3>Browsing History</h3>
+    <ul class="list-group">
+      {% for item in history %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ item.movie_name }}</span>
+        <small class="text-muted">{{ item.viewed_at }}</small>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No movies viewed yet.</li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="mt-4">Your Ratings</h3>
+    <ul class="list-group">
+      {% for item in ratings %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ item.movie_name }}</span>
+        <small class="text-muted">{{ item.rating }}/5</small>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No ratings yet.</li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="mt-4">Your Reviews & Sentiment</h3>
+    <ul class="list-group">
+      {% for item in reviews %}
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span>{{ item.movie_name }}</span>
+          <small class="text-muted">{{ item.sentiment_label|title }} ({{ item.sentiment_score }})</small>
+        </div>
+        <small>{{ item.review_text }}</small>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No reviews yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
