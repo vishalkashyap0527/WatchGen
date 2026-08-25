@@ -12,9 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-urib6!g3&n*=0gzz@(sx$-u*9ko%qp-2k42zf)48o2)84ghz+='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "watchgen.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
