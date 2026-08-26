@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-urib6!g3&n*=0gzz@(sx$-u*9ko%qp-2k42zf)48o2)84ghz+=
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "watchgen.onrender.com",
+    "watchgen-m4e4.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
